@@ -22,8 +22,14 @@ public class FFT
     {
         butterFlyCalc(data.length,data);
         FFTData=FFTList.toArray(new Complex[0]);
+        List<Double> dFFTList=new ArrayList<Double>();
         for(Complex c:FFTData)
-            System.out.println("FFTData:"+c.abs());
+            dFFTList.add(c.abs());
+        Double[] dFFTData;
+        dFFTData=reverse(dFFTList.toArray(new Double[0]));
+        for(Double d:dFFTData)
+            System.out.println("FFTData:"+d);
+
     }
 
     /*public double[] getFFT(Short[] data)
@@ -55,5 +61,18 @@ public class FFT
         butterFlyCalc(plusData.length,plusData);
         butterFlyCalc(minusData.length,minusData);
         //System.out.println(new Complex(0,-2*PI/8).exp());
+    }
+
+    private Double[] reverse(Double[] data)
+    {
+        double tempData;
+        for(int i=0;i<data.length/2;i++)
+        {
+            tempData=data[i];
+            data[i]=data[Integer.rotateRight(Integer.reverse(i), 32 - 3)];
+            data[Integer.rotateRight(Integer.reverse(i), 32 - 3)]=tempData;
+            //System.out.println(Integer.toBinaryString(i)+":rev:"+Integer.toBinaryString(Integer.rotateRight(Integer.reverse(i), 32 - 3)));
+        }
+        return data;
     }
 }
