@@ -25,7 +25,7 @@ public class Main extends Application {
         Short[] sdata=wav.getSoundData();
         FFT fft;
         primaryStage.show();
-        fft=new FFT(sdata);
+        fft=new FFT(sdata,13);
         Double[] FFTdata=fft.getFFT();
         for(int i=0;i<FFTdata.length/2;i++) {
             Series.getData().add(new XYChart.Data(i,FFTdata[i]));

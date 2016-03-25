@@ -12,12 +12,13 @@ import java.util.List;
 public class FFT
 {
     public static double PI=FastMath.PI;
-    Complex[] data;
-    List<Complex> FFTList=new ArrayList<Complex>();
-    Complex[] FFTData;
+    private Complex[] data;
+    private List<Complex> FFTList=new ArrayList<Complex>();
+    private Complex[] FFTData;
+    private int bitsNum;
 
 
-    public FFT(Short[] data)
+    public FFT(Short[] data,int bitsNum)
     {
         List<Complex> tempData=new ArrayList<Complex>();
         for(Short s:data)
@@ -25,14 +26,16 @@ public class FFT
         if(data.length%2!=0)
             tempData.remove(data.length-1);
         this.data=tempData.toArray(new Complex[0]);
+        this.bitsNum=bitsNum;
 
     }
-    public FFT(double[] data)
+    public FFT(double[] data,int bitsNum)
     {
         List<Complex> tempData=new ArrayList<Complex>();
         for(double d:data)
             tempData.add(new Complex(d));
         this.data=tempData.toArray(new Complex[0]);
+        this.bitsNum=bitsNum;
     }
 
     public Double[] getFFT()
@@ -42,8 +45,8 @@ public class FFT
         List<Double> data=new ArrayList<Double>();
         for(Complex c:FFTData)
             data.add(c.abs()/this.data.length);
-
-        return data.toArray(new Double[0]);
+        Double[] revData=data.toArray(new Double[0]);
+        return reverse(revData,bitsNum);
     }
 
     private void butterFlyCalc(int length,Complex[] data)
@@ -66,5 +69,18 @@ public class FFT
         butterFlyCalc(plusData.length,plusData);
         butterFlyCalc(minusData.length,minusData);
         //System.out.println(new Complex(0,-2*PI/8).exp());
+    }
+
+    private Double[] reverse(Double[] data,int bitsNum)
+    {
+        double tempData;
+        for(int i=0;i<data.length/2;i++)
+        {
+            tempData=data[i];
+            data[i]=data[Integer.rotateRight(Integer.reverse(i),32-bitsNum)];
+            data[Integer.rotateRight(Integer.reverse(i),32-bitsNum)]=tempData;
+            //System.out.println(Integer.toBinaryString(i)+":rev:"+Integer.toBinaryString(Integer.rotateRight(Integer.reverse(i), 32 - 3)));
+        }
+        return data;
     }
 }
