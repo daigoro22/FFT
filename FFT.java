@@ -11,29 +11,40 @@ import java.util.List;
  */
 public class FFT
 {
-    private double PI=FastMath.PI;
-    Complex[] data={new Complex(0), new Complex(PI/4),new Complex(2*PI/4),new Complex(3*PI/4),
-            new Complex(PI),new Complex(3*PI/4),new Complex(2*PI/4),new Complex(PI/4)};
+    public static double PI=FastMath.PI;
+    Complex[] data;
     List<Complex> FFTList=new ArrayList<Complex>();
     Complex[] FFTData;
 
 
-    public FFT()
+    public FFT(Short[] data)
     {
-        butterFlyCalc(data.length,data);
-        FFTData=FFTList.toArray(new Complex[0]);
-        for(Complex c:FFTData)
-            System.out.println("FFTData:"+c.abs());
+        List<Complex> tempData=new ArrayList<Complex>();
+        for(Short s:data)
+            tempData.add(new Complex(s.doubleValue()));
+        if(data.length%2!=0)
+            tempData.remove(data.length-1);
+        this.data=tempData.toArray(new Complex[0]);
+
+    }
+    public FFT(double[] data)
+    {
+        List<Complex> tempData=new ArrayList<Complex>();
+        for(double d:data)
+            tempData.add(new Complex(d));
+        this.data=tempData.toArray(new Complex[0]);
     }
 
-    /*public double[] getFFT(Short[] data)
+    public Double[] getFFT()
     {
         butterFlyCalc(this.data.length,this.data);
         FFTData=FFTList.toArray(new Complex[0]);
-
+        List<Double> data=new ArrayList<Double>();
         for(Complex c:FFTData)
-            System.out.println("FFTData:"+c.abs());
-    }*/
+            data.add(c.abs()/this.data.length);
+
+        return data.toArray(new Double[0]);
+    }
 
     private void butterFlyCalc(int length,Complex[] data)
     {
