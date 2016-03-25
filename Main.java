@@ -27,6 +27,9 @@ public class Main extends Application {
         primaryStage.show();
         fft=new FFT(sdata,13);
         Double[] FFTdata=fft.getFFT();
+        /*for(int i=0;i<fft.data.length;i++)
+            Series.getData().add(new XYChart.Data(i,fft.data[i].getReal()));*/
+
         for(int i=0;i<FFTdata.length/2;i++) {
             Series.getData().add(new XYChart.Data(i,FFTdata[i]));
             System.out.println("FFT["+i+"]:" + FFTdata[i]);
