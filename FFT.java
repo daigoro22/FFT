@@ -17,11 +17,11 @@ public class FFT
     private Complex[] FFTData;
     private int bitsNum;
 
-
     public FFT(Short[] data)
     {
         this.bitsNum=aryCut(data);
     }
+
     public FFT(double[] data,int bitsNum)
     {
         List<Complex> tempData=new ArrayList<Complex>();
@@ -37,7 +37,7 @@ public class FFT
         FFTData=FFTList.toArray(new Complex[0]);
         List<Double> data=new ArrayList<Double>();
         for(Complex c:FFTData)
-            data.add(c.abs()/*/this.data.length*/);
+            data.add(c.abs()/this.data.length);
         Double[] revData=data.toArray(new Double[0]);
         return reverse(revData,bitsNum);
     }
@@ -50,8 +50,11 @@ public class FFT
 
 
         for(int i=0;i<halfLen;i++) {
+            if(i>=halfLen)
+                return;
             plusData[i]=data[i].add(data[halfLen + i]);
             minusData[i] = new Complex(0, -2 * PI * i / length).exp();
+            //minusData[i]=new Complex(0,-2*PI*i/smpRate).exp();
             minusData[i] = minusData[i].multiply(data[i].subtract(data[halfLen + i]));
             if(length==2){
                 FFTList.add(plusData[0]);
@@ -81,14 +84,14 @@ public class FFT
     {
         int count=0;
         List<Complex> tempData=new ArrayList<Complex>();
-        for(Short s:data)
-            tempData.add(new Complex(s.doubleValue()));
+        for(int i=0;i<data.length;i++)
+            tempData.add(new Complex(data[i].doubleValue()));
         int len=tempData.size();int len2=len;
         while((double)(len/=2)>=1)
             count++;
-        int j=(int)FastMath.pow(2,count);
-        for(int i=j;i<len2;i++) {
-            tempData.remove(j);
+        int j=(int)FastMath.pow(2,count+1);
+        for(int i=len2;i<j;i++) {
+            tempData.add(new Complex(0));
         }
         this.data=tempData.toArray(new Complex[0]);
         return count;
