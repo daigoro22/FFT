@@ -19,7 +19,7 @@ public class FFT
 
     public FFT(Short[] data)
     {
-        this.bitsNum=aryCut(data);
+        this.bitsNum=aryAdd(data);
     }
 
     public FFT(double[] data,int bitsNum)
@@ -29,6 +29,12 @@ public class FFT
             tempData.add(new Complex(d));
         this.data=tempData.toArray(new Complex[0]);
         this.bitsNum=bitsNum;
+        /*Double[] a=new Double[16];
+        for(int i=0;i<a.length;i++)
+            a[i]=(double)i;
+        Double[] b=reverse(a,4);
+        for(int i=0;i<b.length;i++)
+            System.out.println(b[i]);*/
     }
 
     public Double[] getFFT()
@@ -39,7 +45,8 @@ public class FFT
         for(Complex c:FFTData)
             data.add(c.abs()/this.data.length);
         Double[] revData=data.toArray(new Double[0]);
-        return reverse(revData,bitsNum);
+        //return reverse(revData, bitsNum);
+        return revData;
     }
 
     private void butterFlyCalc(int length,Complex[] data)
@@ -70,22 +77,25 @@ public class FFT
     private Double[] reverse(Double[] data,int bitsNum)
     {
         double tempData;
-        for(int i=0;i<data.length/2;i++)
+        int len=data.length/2;
+        for(int i=0;i<len;i++)
         {
+            int revNum=Integer.rotateRight(Integer.reverse(i),Integer.SIZE-bitsNum);
+            //System.out.println("swap:"+i+"("+data[i]+")"+"and"+Integer.rotateRight(Integer.reverse(i),Integer.SIZE-bitsNum)+"("+data[Integer.rotateRight(Integer.reverse(i),Integer.SIZE-bitsNum)]+")");
             tempData=data[i];
-            data[i]=data[Integer.rotateRight(Integer.reverse(i),32-bitsNum)];
-            data[Integer.rotateRight(Integer.reverse(i),32-bitsNum)]=tempData;
+            data[i]=data[revNum];
+            data[revNum]=tempData;
             //System.out.println(Integer.toBinaryString(i)+":rev:"+Integer.toBinaryString(Integer.rotateRight(Integer.reverse(i), 32 - 3)));
         }
         return data;
     }
 
-    private int aryCut(Short[] data)
+    private int aryAdd(Short[] data)
     {
         int count=0;
         List<Complex> tempData=new ArrayList<Complex>();
         for(int i=0;i<data.length;i++)
-            tempData.add(new Complex(data[i].doubleValue()));
+            tempData.add(new Complex(data[i].doubleValue()*window.hamming(i,data.length)));
         int len=tempData.size();int len2=len;
         while((double)(len/=2)>=1)
             count++;

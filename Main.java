@@ -21,8 +21,8 @@ public class Main extends Application {
             PI,3*PI/4,2*PI/4,PI/4};
 
     double[] teisuuData={1,1,1,1,1,1,1,1};
-    double[] sinData=new double[5000];
-    private int smpf=5000;
+    double[] sinData=new double[4096];
+    private int smpf=4096;
 
     int f=200;
 
@@ -32,7 +32,6 @@ public class Main extends Application {
         lineChart.getData().add(Series);
         lineChart.getData().add(appSeries);
         WAV wav=new WAV("am49.wav");
-
         for(int i=0;i<sinData.length;i++)
             sinData[i]=F((double)i/smpf);
         //WAV wav=new WAV("am50.wav");
@@ -43,8 +42,8 @@ public class Main extends Application {
         Short[] sdata=wav.getSoundData();
         FFT fft;
         primaryStage.show();
-        //fft=new FFT(data,3);
-        fft=new FFT(sdata);
+        fft=new FFT(sinData,12);
+        //fft=new FFT(sdata);
         Double[] FFTdata=fft.getFFT();
 
         /*for(int i=0;i<fft.data.length;i++) {
@@ -53,10 +52,12 @@ public class Main extends Application {
         }*/
 
         for(int i=0;i<FFTdata.length/2;i++) {
-            //Series.getData().add(new XYChart.Data(((double)WAV.dataInf.samplingRate/sdata.length)*i,FFTdata[i]));
-            //Series.getData().add(new XYChart.Data((double) 1 / ((double) sinData.length / smpf) * i, FFTdata[i]));
-            Series.getData().add(new XYChart.Data(i, FFTdata[i]));
-            System.out.println("FFT[" + i + "]:" + FFTdata[i]);
+            //Series.getData().add(new XYChart.Data(((double)WAV.dataInf.samplingRate/sdata.length)+i,FFTdata[i]));
+            Series.getData().add(new XYChart.Data(((double)smpf/sinData.length) *i, FFTdata[Integer.rotateRight(Integer.reverse(i),Integer.SIZE-12)]));
+            //Series.getData().add(new XYChart.Data(i, FFTdata[i]));
+            //System.out.println("FFT[" +(((double)WAV.dataInf.samplingRate/sdata.length)* i )+ "]:" + FFTdata[i]);
+            if(FFTdata[i]>0.3)
+            System.out.println("FFT[" +(((double)smpf/sinData.length)* i )+ "]:" + FFTdata[i]);
         }
     }
 
