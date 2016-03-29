@@ -12,7 +12,7 @@ import java.util.List;
 public class FFT
 {
     public static double PI=FastMath.PI;
-    private Complex[] data;
+    public Complex[] data;
     private List<Complex> FFTList=new ArrayList<Complex>();
     private Double[] FFTData;
     public  int FFTLength;
