@@ -12,23 +12,27 @@ import java.util.List;
 public class FFT
 {
     public static double PI=FastMath.PI;
-    public Complex[] data;
+    private Complex[] data;
     private List<Complex> FFTList=new ArrayList<Complex>();
-    private Complex[] FFTData;
+    private Double[] FFTData;
+    public  int FFTLength;
     private int bitsNum;
+    private int smpf;
 
-    public FFT(Short[] data)
+    public FFT(Short[] data,int smpf)
     {
         this.bitsNum=aryAdd(data);
+        this.smpf=smpf;
     }
 
-    public FFT(double[] data,int bitsNum)
+    public FFT(double[] data,int bitsNum,int smpf)
     {
         List<Complex> tempData=new ArrayList<Complex>();
         for(double d:data)
             tempData.add(new Complex(d));
         this.data=tempData.toArray(new Complex[0]);
         this.bitsNum=bitsNum;
+        this.smpf=smpf;
         /*Double[] a=new Double[16];
         for(int i=0;i<a.length;i++)
             a[i]=(double)i;
@@ -37,16 +41,21 @@ public class FFT
             System.out.println(b[i]);*/
     }
 
-    public Double[] getFFT()
+    public void FFTcalc()
     {
         butterFlyCalc(this.data.length,this.data);
-        FFTData=FFTList.toArray(new Complex[0]);
+        Complex[] FFTData=FFTList.toArray(new Complex[0]);
         List<Double> data=new ArrayList<Double>();
         for(Complex c:FFTData)
             data.add(c.abs()/this.data.length);
-        Double[] revData=data.toArray(new Double[0]);
+        this.FFTData=data.toArray(new Double[0]);
+        this.FFTLength=FFTData.length;
         //return reverse(revData, bitsNum);
-        return revData;
+    }
+
+    public double getFFTData(int index)
+    {
+        return FFTData[Integer.rotateRight(Integer.reverse(index),Integer.SIZE-bitsNum)];
     }
 
     private void butterFlyCalc(int length,Complex[] data)
@@ -74,7 +83,7 @@ public class FFT
         //System.out.println(new Complex(0,-2*PI/8).exp());
     }
 
-    private Double[] reverse(Double[] data,int bitsNum)
+    /*private Double[] reverse(Double[] data,int bitsNum)
     {
         double tempData;
         int len=data.length/2;
@@ -88,7 +97,7 @@ public class FFT
             //System.out.println(Integer.toBinaryString(i)+":rev:"+Integer.toBinaryString(Integer.rotateRight(Integer.reverse(i), 32 - 3)));
         }
         return data;
-    }
+    }*/
 
     private int aryAdd(Short[] data)
     {

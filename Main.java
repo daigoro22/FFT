@@ -22,7 +22,7 @@ public class Main extends Application {
 
     double[] teisuuData={1,1,1,1,1,1,1,1};
     double[] sinData=new double[4096];
-    private int smpf=4096;
+    private int smpf=10000;
 
     int f=200;
 
@@ -42,22 +42,22 @@ public class Main extends Application {
         Short[] sdata=wav.getSoundData();
         FFT fft;
         primaryStage.show();
-        fft=new FFT(sinData,12);
-        //fft=new FFT(sdata);
-        Double[] FFTdata=fft.getFFT();
+        fft=new FFT(sinData,12,smpf);
+        //fft=new FFT(sdata,WAV.dataInf.samplingRate);
+        fft.FFTcalc();
 
         /*for(int i=0;i<fft.data.length;i++) {
             Series.getData().add(new XYChart.Data(i, fft.data[i].getReal()));
             System.out.println("data["+i+"]:"+fft.data[i].getReal());
         }*/
 
-        for(int i=0;i<FFTdata.length/2;i++) {
-            //Series.getData().add(new XYChart.Data(((double)WAV.dataInf.samplingRate/sdata.length)+i,FFTdata[i]));
-            Series.getData().add(new XYChart.Data(((double)smpf/sinData.length) *i, FFTdata[Integer.rotateRight(Integer.reverse(i),Integer.SIZE-12)]));
-            //Series.getData().add(new XYChart.Data(i, FFTdata[i]));
+        for(int i=0;i<sinData.length/2;i++) {
+            //Series.getData().add(new XYChart.Data(((double)WAV.dataInf.samplingRate/fft.FFTLength) *i,fft.getFFTData(i)));
+            //System.out.println("FFTData:["+Integer.rotateRight(Integer.reverse(i),Integer.SIZE-13)+"]"+fft.getFFTData(i));
+            Series.getData().add(new XYChart.Data((double)smpf/sinData.length*i, fft.getFFTData(i)));
             //System.out.println("FFT[" +(((double)WAV.dataInf.samplingRate/sdata.length)* i )+ "]:" + FFTdata[i]);
-            if(FFTdata[i]>0.3)
-            System.out.println("FFT[" +(((double)smpf/sinData.length)* i )+ "]:" + FFTdata[i]);
+            if(fft.getFFTData(i)>0.3)
+                System.out.println((double)smpf/sinData.length*i);
         }
     }
 
