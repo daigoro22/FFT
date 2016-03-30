@@ -55,7 +55,7 @@ public class Main extends Application {
             System.out.println("data["+i+"]:"+fft.data[i].getReal());
         }*/
 
-        for(int i=0;i<fft.FFTLength/2;i++) {
+        for(int i=0;i<fft.FFTLength/4;i++) {
             Series.getData().add(new XYChart.Data(((double)WAV.dataInf.samplingRate/fft.FFTLength) *2*i,fft.getFFTData(i)));
             //Series.getData().add(new XYChart.Data((double)smpf/sinData.length*i, fft.getFFTData(i)));
             if(fft.getFFTData(i)>500)
