@@ -23,6 +23,9 @@ public class Main extends Application {
     double[] teisuuData={1,1,1,1,1,1,1,1};
     double[] sinData=new double[8192];
     private int smpf=3500;
+    private Short[] rData;
+
+    private recorder recorder=new recorder();
 
     int f=1500;
 
@@ -38,6 +41,21 @@ public class Main extends Application {
             else
                 sinData[i]=0;
         }
+
+        for(int i=10;i>0;i--)//五秒待ち後５秒録音　
+        {
+            if(i>5) {
+                System.out.println(i);
+            }
+            else{
+                rData=recorder.getVoice();
+            }
+            try {
+                Thread.sleep(1000);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
         //WAV wav=new WAV("am50.wav");
         WAV wav=new WAV("am55.wav");
         //WAV wav=new WAV("400Hz.WAV");
@@ -49,6 +67,11 @@ public class Main extends Application {
         //fft=new FFT(sinData,12,smpf);
         fft=new FFT(sdata,WAV.dataInf.samplingRate);
         fft.FFTcalc();
+
+
+        for(int i=0;i<rData.length;i++){
+            Series.getData().add(new XYChart.Data(i,rData[i]));
+        }
 
         /*for(int i=0;i<fft.data.length;i++) {
             Series.getData().add(new XYChart.Data(i, fft.data[i].getReal()));
@@ -70,6 +93,11 @@ public class Main extends Application {
         }*/
     }
 
+    @Override
+    public void stop()
+    {
+        recorder.stop();
+    }
 
     public static void main(String[] args) {
         launch(args);
