@@ -25,22 +25,6 @@ public class FFT
         this.smpf=smpf;
     }
 
-    public FFT(double[] data,int bitsNum,int smpf)
-    {
-        List<Complex> tempData=new ArrayList<Complex>();
-        for(double d:data)
-            tempData.add(new Complex(d));
-        this.data=tempData.toArray(new Complex[0]);
-        this.bitsNum=bitsNum;
-        this.smpf=smpf;
-        /*Double[] a=new Double[16];
-        for(int i=0;i<a.length;i++)
-            a[i]=(double)i;
-        Double[] b=reverse(a,4);
-        for(int i=0;i<b.length;i++)
-            System.out.println(b[i]);*/
-    }
-
     public void FFTcalc()
     {
         butterFlyCalc(this.data.length,this.data);
@@ -113,6 +97,15 @@ public class FFT
             tempData.add(new Complex(0));
         }
         this.data=tempData.toArray(new Complex[0]);
+        System.out.println("arrayAdd:"+data.length+":"+tempData.size());
         return count;
+    }
+
+
+    private int arrayMaxIndex(Double[] array) {
+        int index = 0;
+        for (int i = 1; i < array.length; i++)
+            index = (array[index] >= array[i]) ? index : i;
+        return index;
     }
 }

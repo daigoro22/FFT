@@ -10,13 +10,13 @@ import java.util.List;
  */
 public class recorder
 {
-    public static final int bit=8;
+    public static final int bit=16;
     public static final int hz=8000;
     public static final int STEREO=1;
 
     private TargetDataLine target;
     private AudioInputStream stream;
-    private byte[] voice=new byte[hz*bit/8*2];
+    private byte[] voice=new byte[hz*bit/8*STEREO];
 
     private boolean isRunning=true;
     recorder()
@@ -62,7 +62,7 @@ public class recorder
     public Short[] getVoice()
     {
         List<Short> dataList=new ArrayList<Short>();
-        for(int i=0;i<voice.length;i+=2){
+        for(int i=0;i<voice.length-2;i+=2){
             dataList.add((short)readBytes(2,i,voice));
         }
         return dataList.toArray(new Short[0]);
