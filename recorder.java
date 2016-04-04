@@ -70,6 +70,8 @@ public class recorder
 
     public Short[] getVoice()
     {
+        target.stop();
+        target.close();
         List<Short> dataList=new ArrayList<Short>();
         for(int i=0;i<voice.length-2;i+=2){
             dataList.add((short)readBytes(2,i,voice));
@@ -96,14 +98,13 @@ public class recorder
         target.close();
     }
 
-    private int readBytes(int byteNum,int indexNum,byte[] data)//リトルエンディアンでindexNum+1番目からbyteNumバイト読み込む
+    private int readBytes(int byteNum,int indexNum,byte[] data)//リトルエンディアンでindexNum番目からbyteNumバイト読み込む
     {
-        indexNum--;
-        indexNum+=byteNum;
+        indexNum+=byteNum-1;
         int bytes=0;
         int j=0;
         for (int i = 2*(byteNum-1); i >= 0; i -= 2)
-            bytes += ((data[indexNum + j--])* Math.pow(16, i));
+            bytes += ((data[indexNum + j--]&0xff)* Math.pow(16, i));
 
         return (byteNum<3)?((short)bytes):(bytes);
     }

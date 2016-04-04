@@ -65,16 +65,16 @@ public class Main extends Application {
         //fft=new FFT(sdata,WAV.dataInf.samplingRate);
         fft=new FFT(rData, recorder.hz);
         fft.FFTcalc();
-
+        Double[] fftData=fft.getFFTData();
 
         /*for(int i=0;i<fft.data.length;i++){
             Series.getData().add(new XYChart.Data(i,fft.data[i].getReal()));
             System.out.println("data["+i+"]:"+fft.data[i].getReal());
         }*/
 
-        for(int i=0;i<fft.FFTLength/4;i++) {
-            Series.getData().add(new XYChart.Data(((double) recorder.hz / (fft.FFTLength)) /2* i, fft.getFFTData(i)));
-            if(fft.getFFTData(i)>70)
+        for(int i=0;i<fft.FFTLength/2;i++) {
+            Series.getData().add(new XYChart.Data(((double) recorder.hz / (fft.FFTLength))/4 * i,fftData[i]));
+            if(fftData[i]>70)
                 System.out.println(((double) recorder.hz / (fft.FFTLength)) * i);
         }
 
@@ -87,6 +87,13 @@ public class Main extends Application {
             Series.getData().add(new XYChart.Data(((double)WAV.dataInf.samplingRate/fft.FFTLength)*i,fft.getFFTData(i)));
             //Series.getData().add(new XYChart.Data((double)smpf/sinData.length*i, fft.getFFTData(i)));
             if(fft.getFFTData(i)>500)
+                System.out.println(((double)WAV.dataInf.samplingRate/fft.FFTLength)*i);
+        }*/
+
+        /*for(int i=0;i<fft.FFTLength/2;i++) {
+            Series.getData().add(new XYChart.Data(((double)WAV.dataInf.samplingRate/fft.FFTLength)*i,fftData[i]));
+            //Series.getData().add(new XYChart.Data((double)smpf/sinData.length*i, fft.getFFTData(i)));
+            if(fftData[i]>500)
                 System.out.println(((double)WAV.dataInf.samplingRate/fft.FFTLength)*i);
         }*/
 
@@ -103,6 +110,7 @@ public class Main extends Application {
     {
         recorder.stop();
         reader.stop();
+        player.end();
     }
 
     public static void main(String[] args) {

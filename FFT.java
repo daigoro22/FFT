@@ -32,20 +32,26 @@ public class FFT
         List<Double> data=new ArrayList<Double>();
         for(Complex c:FFTData)
             data.add(c.abs()/this.data.length);
-        this.FFTData=data.toArray(new Double[0]);
+        this.FFTData=reverse(data.toArray(new Double[0]),bitsNum);
         this.FFTLength=FFTData.length;
-        System.out.println("max:" + arrayMaxIndex(data.toArray(new Double[0]))*((double)smpf/FFTLength));
+        //System.out.println("max:" + arrayMaxIndex(data.toArray(new Double[0]))*((double)smpf/FFTLength));
         //return reverse(revData, bitsNum);
     }
 
-    public double getFFTData(int index)
+    /*public double getFFTData(int index)
     {
         int i=Integer.rotateRight(Integer.reverse(index),Integer.SIZE-bitsNum);
         System.out.println(bitsNum+"index:"+index+"rev:"+i);
         if(i>FFTLength||0>i)
             return 0;
         return FFTData[i];
+    }*/
+
+    public Double[] getFFTData()
+    {
+        return FFTData;
     }
+
 
     private void butterFlyCalc(int length,Complex[] data)
     {
@@ -71,21 +77,24 @@ public class FFT
         //System.out.println(new Complex(0,-2*PI/8).exp());
     }
 
-    /*private Double[] reverse(Double[] data,int bitsNum)
+    private Double[] reverse(Double[] data,int bitsNum)
     {
         double tempData;
-        int len=data.length/2;
+        int len=data.length;
         for(int i=0;i<len;i++)
         {
             int revNum=Integer.rotateRight(Integer.reverse(i),Integer.SIZE-bitsNum);
             //System.out.println("swap:"+i+"("+data[i]+")"+"and"+Integer.rotateRight(Integer.reverse(i),Integer.SIZE-bitsNum)+"("+data[Integer.rotateRight(Integer.reverse(i),Integer.SIZE-bitsNum)]+")");
-            tempData=data[i];
-            data[i]=data[revNum];
-            data[revNum]=tempData;
+            if(i<revNum) {
+                System.out.println("swap:"+i+"to"+revNum);
+                tempData = data[i];
+                data[i] = data[revNum];
+                data[revNum] = tempData;
+            }
             //System.out.println(Integer.toBinaryString(i)+":rev:"+Integer.toBinaryString(Integer.rotateRight(Integer.reverse(i), 32 - 3)));
         }
         return data;
-    }*/
+    }
 
     private int aryAdd(Short[] data)
     {
@@ -102,7 +111,7 @@ public class FFT
         }
         this.data=tempData.toArray(new Complex[0]);
         System.out.println("arrayAdd:"+data.length+":"+tempData.size());
-        return count;
+        return count+1;
     }
 
     private int arrayMaxIndex(Double[] array) {
