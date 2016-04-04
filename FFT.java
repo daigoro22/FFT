@@ -34,12 +34,17 @@ public class FFT
             data.add(c.abs()/this.data.length);
         this.FFTData=data.toArray(new Double[0]);
         this.FFTLength=FFTData.length;
+        System.out.println("max:" + arrayMaxIndex(data.toArray(new Double[0]))*((double)smpf/FFTLength));
         //return reverse(revData, bitsNum);
     }
 
     public double getFFTData(int index)
     {
-        return FFTData[Integer.rotateRight(Integer.reverse(index),Integer.SIZE-bitsNum)];
+        int i=Integer.rotateRight(Integer.reverse(index),Integer.SIZE-bitsNum);
+        System.out.println(bitsNum+"index:"+index+"rev:"+i);
+        if(i>FFTLength||0>i)
+            return 0;
+        return FFTData[i];
     }
 
     private void butterFlyCalc(int length,Complex[] data)
@@ -47,7 +52,6 @@ public class FFT
         int halfLen=length/2;
         Complex[] plusData=new Complex[halfLen];
         Complex[] minusData=new Complex[halfLen];
-
 
         for(int i=0;i<halfLen;i++) {
             if(i>=halfLen)
@@ -101,11 +105,10 @@ public class FFT
         return count;
     }
 
-
     private int arrayMaxIndex(Double[] array) {
         int index = 0;
         for (int i = 1; i < array.length; i++)
             index = (array[index] >= array[i]) ? index : i;
-        return index;
+        return Integer.rotateRight(Integer.reverse(index),Integer.SIZE-bitsNum);
     }
 }

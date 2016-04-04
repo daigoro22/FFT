@@ -1,6 +1,8 @@
 package sample;
 
 import javax.sound.sampled.*;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,6 +19,7 @@ public class recorder
     private TargetDataLine target;
     private AudioInputStream stream;
     private byte[] voice=new byte[hz*bit/8*STEREO];
+    private FileOutputStream output;
 
     private boolean isRunning=true;
     recorder()
@@ -38,6 +41,12 @@ public class recorder
 
 
         } catch (LineUnavailableException e) {
+            e.printStackTrace();
+        }
+
+        try{
+            output=new FileOutputStream("output.dat");
+        }catch(FileNotFoundException e){
             e.printStackTrace();
         }
 
@@ -65,7 +74,19 @@ public class recorder
         for(int i=0;i<voice.length-2;i+=2){
             dataList.add((short)readBytes(2,i,voice));
         }
+        try {
+            output.write(voice);
+        }catch(IOException e)
+        {
+            e.printStackTrace();
+        }
+
         return dataList.toArray(new Short[0]);
+    }
+
+    public byte[] getBVoice()
+    {
+        return voice;
     }
 
     public void stop()
@@ -77,11 +98,12 @@ public class recorder
 
     private int readBytes(int byteNum,int indexNum,byte[] data)//リトルエンディアンでindexNum+1番目からbyteNumバイト読み込む
     {
+        indexNum--;
         indexNum+=byteNum;
         int bytes=0;
         int j=0;
         for (int i = 2*(byteNum-1); i >= 0; i -= 2)
-            bytes += (data[indexNum + j--] * Math.pow(16, i));
+            bytes += ((data[indexNum + j--])* Math.pow(16, i));
 
         return (byteNum<3)?((short)bytes):(bytes);
     }
