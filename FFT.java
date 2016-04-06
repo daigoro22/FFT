@@ -85,8 +85,8 @@ public class FFT
         {
             int revNum=Integer.rotateRight(Integer.reverse(i),Integer.SIZE-bitsNum);
             //System.out.println("swap:"+i+"("+data[i]+")"+"and"+Integer.rotateRight(Integer.reverse(i),Integer.SIZE-bitsNum)+"("+data[Integer.rotateRight(Integer.reverse(i),Integer.SIZE-bitsNum)]+")");
-            if(i<revNum) {
-                System.out.println("swap:"+i+"to"+revNum);
+            if(i<=revNum) {
+                System.out.println(bitsNum+"swap:"+i+"to"+revNum);
                 tempData = data[i];
                 data[i] = data[revNum];
                 data[revNum] = tempData;
@@ -106,18 +106,20 @@ public class FFT
         while((double)(len/=2)>=1)
             count++;
         int j=(int)FastMath.pow(2,count+1);
+
         for(int i=len2;i<j;i++) {
             tempData.add(new Complex(0));
         }
+
         this.data=tempData.toArray(new Complex[0]);
         System.out.println("arrayAdd:"+data.length+":"+tempData.size());
         return count+1;
     }
 
-    private int arrayMaxIndex(Double[] array) {
+    public int arrayMaxIndex(Double[] array) {
         int index = 0;
-        for (int i = 1; i < array.length; i++)
+        for (int i = 1; i < array.length/2; i++)
             index = (array[index] >= array[i]) ? index : i;
-        return Integer.rotateRight(Integer.reverse(index),Integer.SIZE-bitsNum);
+        return index;
     }
 }

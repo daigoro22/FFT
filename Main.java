@@ -50,6 +50,8 @@ public class Main extends Application {
         player.setVoice(recorder.getBVoice());
 
         /*WAV wav=new WAV("am49.wav");
+        //WAV wav=new WAV("A3.wav");
+        //WAV wav=new WAV("andA4#.wav");
         //WAV wav=new WAV("am50.wav");
         //WAV wav=new WAV("am55.wav");
         //WAV wav=new WAV("400Hz.WAV");
@@ -72,11 +74,10 @@ public class Main extends Application {
             System.out.println("data["+i+"]:"+fft.data[i].getReal());
         }*/
 
-        for(int i=0;i<fft.FFTLength/2;i++) {
-            Series.getData().add(new XYChart.Data(((double) recorder.hz / (fft.FFTLength))/4 * i,fftData[i]));
-            if(fftData[i]>70)
-                System.out.println(((double) recorder.hz / (fft.FFTLength)) * i);
+        for(int i=0;i<recorder.hz/2;i++) {
+            Series.getData().add(new XYChart.Data(((double) recorder.hz / (fft.FFTLength)) * i, fftData[i]));
         }
+        System.out.println("max:"+((double) recorder.hz / (fft.FFTLength))*fft.arrayMaxIndex(fftData));
 
         /*for(int i=0;i<fft.data.length;i++) {
             Series.getData().add(new XYChart.Data(i, fft.data[i].getReal()));
@@ -90,18 +91,11 @@ public class Main extends Application {
                 System.out.println(((double)WAV.dataInf.samplingRate/fft.FFTLength)*i);
         }*/
 
-        /*for(int i=0;i<fft.FFTLength/2;i++) {
+        /*for(int i=0;i<WAV.dataInf.samplingRate/2;i++) {
             Series.getData().add(new XYChart.Data(((double)WAV.dataInf.samplingRate/fft.FFTLength)*i,fftData[i]));
             //Series.getData().add(new XYChart.Data((double)smpf/sinData.length*i, fft.getFFTData(i)));
             if(fftData[i]>500)
                 System.out.println(((double)WAV.dataInf.samplingRate/fft.FFTLength)*i);
-        }*/
-
-        /*for(int i=0;i<sinData.length/2;i++)
-        {
-            Series.getData().add(new XYChart.Data((double)smpf/sinData.length*i, fft.getFFTData(i)));
-            if(fft.getFFTData(i)>0.1)
-                System.out.println((double)smpf/sinData.length*i);
         }*/
     }
 

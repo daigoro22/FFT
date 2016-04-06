@@ -12,9 +12,10 @@ import java.util.List;
  */
 public class recorder
 {
+    public static final int bandWidth=2000;
     public static final int bit=16;
     public static final int hz=8000;
-    public static final int STEREO=1;
+    public static final int STEREO=2;
 
     private TargetDataLine target;
     private AudioInputStream stream;
@@ -27,6 +28,7 @@ public class recorder
         try {
             //オーディオフォーマットの指定
             AudioFormat af = new AudioFormat(hz,bit,STEREO,true,false);
+            //System.out.println(af.toString());
             //ターゲットデータラインを取得
             DataLine.Info info =new DataLine.Info(TargetDataLine.class,af);
             target=(TargetDataLine)AudioSystem.getLine(info);
@@ -72,9 +74,14 @@ public class recorder
     {
         target.stop();
         target.close();
-        List<Short> dataList=new ArrayList<Short>();
-        for(int i=0;i<voice.length-2;i+=2){
-            dataList.add((short)readBytes(2,i,voice));
+        List<Short> LdataList=new ArrayList<Short>();
+        List<Short> RdataList=new ArrayList<Short>();
+        int j=0;
+        for(int i=0;i<voice.length;i+=2){
+            if(j++%2==0)
+                RdataList.add((short)readBytes(2,i,voice));
+            else
+                LdataList.add((short)readBytes(2,i,voice));
         }
         try {
             output.write(voice);
@@ -83,7 +90,7 @@ public class recorder
             e.printStackTrace();
         }
 
-        return dataList.toArray(new Short[0]);
+        return LdataList.toArray(new Short[0]);
     }
 
     public byte[] getBVoice()

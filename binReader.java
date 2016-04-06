@@ -39,10 +39,9 @@ public class binReader
     public Short[] getVoice()
     {
         List<Short> dataList=new ArrayList<Short>();
-        for(int i=0;i<inputData.length-2;i+=2){
+        for(int i=0;i<inputData.length;i+=2){
             dataList.add((short)readBytes(2,i,inputData));
         }
-
         return dataList.toArray(new Short[0]);
     }
 
